@@ -163,7 +163,7 @@ export const fetchPopularRow = async (): Promise<MovieCardData[]> => {
     id: movie.id,
     title: movie.title,
     posterUrl: buildImageUrl(movie.poster_path),
-    logoUrl: null,
+    logoUrl: "",
   }));
 };
 
@@ -182,5 +182,7 @@ export const fetchPopularRowWithLogos = async (): Promise<MovieCardData[]> => {
     }),
   );
 
-  return enriched;
+  return enriched.filter(
+    (movie): movie is MovieCardData => movie.logoUrl !== null,
+  );
 };
