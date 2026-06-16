@@ -13,7 +13,10 @@ registerRoute(
   new CacheFirst({
     cacheName: "tmdb-images",
     plugins: [
-      new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 }),
+      new ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 60 * 60 * 24 * 30,
+      }),
     ],
   }),
 );
@@ -100,6 +103,8 @@ const AD_DOMAINS = [
   "digg.com",
   "sumo.com",
   "addthis.com",
+  "trip.com",
+  "id.trip.com",
 ];
 
 self.addEventListener("fetch", (event) => {
