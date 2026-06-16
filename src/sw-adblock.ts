@@ -105,6 +105,7 @@ const AD_DOMAINS = [
   "addthis.com",
   "trip.com",
   "id.trip.com",
+  "shopee.co.id",
 ];
 
 self.addEventListener("fetch", (event) => {
