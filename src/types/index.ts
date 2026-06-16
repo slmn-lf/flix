@@ -5,7 +5,7 @@
 
 // Domain types
 export type { Movie } from "./movie";
-export type { TV } from "./tv";
+export type { TV, TVDetail, Season, Episode } from "./tv";
 export type { FeaturedMovie } from "./featured";
 
 // Shared types

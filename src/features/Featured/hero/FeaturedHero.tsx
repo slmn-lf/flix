@@ -65,7 +65,7 @@ export default function FeaturedHero() {
   }
 
   return (
-    <section className="relative h-[85vh] w-full overflow-hidden bg-black">
+    <section className="relative w-full overflow-hidden bg-black aspect-video md:h-[85vh]">
       <HeroMedia
         backdropUrl={featured.posterUrl || mockFeatured.backdropUrl}
         trailerUrl={featured.trailerUrl}
@@ -76,6 +76,7 @@ export default function FeaturedHero() {
       <HeroGradient />
 
       <HeroContent
+        id={featured.id}
         title={featured.title}
         overview={featured.overview}
         logoUrl={featured.logoUrl}

@@ -186,3 +186,50 @@ export const fetchPopularRowWithLogos = async (): Promise<MovieCardData[]> => {
     (movie): movie is MovieCardData => movie.logoUrl !== null,
   );
 };
+
+interface TMDBItem {
+  id: number;
+  title?: string;
+  name?: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  overview: string;
+  vote_average: number;
+  popularity: number;
+}
+
+const fetchRowFromEndpoint = async (
+  endpoint: string,
+  params: Record<string, string | number> = {},
+): Promise<MovieCardData[]> => {
+  const res = await tmdbClient<PaginatedResponse<TMDBItem>>(endpoint, {
+    params: { page: 1, language: "en-US", ...params },
+  });
+
+  return res.results.map((item) => ({
+    id: item.id,
+    title: item.title || item.name || "",
+    posterUrl: buildImageUrl(item.poster_path),
+    logoUrl: "",
+  }));
+};
+
+export const fetchTrendingMovies = (): Promise<MovieCardData[]> =>
+  fetchRowFromEndpoint(TMDB_ENDPOINTS.trendingMoviesWeek);
+
+export const fetchPopularTV = (): Promise<MovieCardData[]> =>
+  fetchRowFromEndpoint(TMDB_ENDPOINTS.popularTV);
+
+export const fetchTrendingTV = (): Promise<MovieCardData[]> =>
+  fetchRowFromEndpoint(TMDB_ENDPOINTS.trendingTV);
+
+export const fetchKoreanDramas = (): Promise<MovieCardData[]> =>
+  fetchRowFromEndpoint(TMDB_ENDPOINTS.discoverTV, { with_origin_country: "KR" });
+
+export const fetchMoviesByGenre = (
+  genreId: number,
+): Promise<MovieCardData[]> =>
+  fetchRowFromEndpoint(TMDB_ENDPOINTS.discoverMovie, {
+    with_genres: genreId,
+    sort_by: "popularity.desc",
+  });

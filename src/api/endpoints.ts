@@ -10,6 +10,7 @@ export const TMDB_ENDPOINTS = {
 
   // Trending
   trendingMoviesWeek: "/trending/movie/week",
+  trendingTV: "/trending/tv/week",
 
   // Movie detail (dynamic)
   movieDetail: (movieId: number) => `/movie/${movieId}`,
@@ -18,11 +19,20 @@ export const TMDB_ENDPOINTS = {
 
   // Search
   searchMovies: "/search/movie",
+  searchTV: "/search/tv",
+  searchMulti: "/search/multi",
 
   // TV Shows
   popularTV: "/tv/popular",
   topRatedTV: "/tv/top_rated",
   onTheAirTV: "/tv/on_the_air",
+  tvDetail: (tvId: number) => `/tv/${tvId}`,
+  tvSeasonEpisodes: (tvId: number, seasonNumber: number) =>
+    `/tv/${tvId}/season/${seasonNumber}`,
+
+  // Discover
+  discoverMovie: "/discover/movie",
+  discoverTV: "/discover/tv",
 
   // Configuration
   configuration: "/configuration",

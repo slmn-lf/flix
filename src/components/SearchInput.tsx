@@ -22,7 +22,7 @@ const SearchInput: FC<SearchInputProps> = ({ value, onChange, onBlur }) => {
         border
         border-white/30
         h-9
-        w-64
+        w-44 sm:w-64
         px-2
         animate-search-in
       "

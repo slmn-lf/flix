@@ -27,13 +27,26 @@ export function HeroMedia({
 
     // Auto unmute after 2 seconds to play audio
     const unmuteTimer = setTimeout(() => {
-      if (iframeRef.current) {
-        // Trigger unmute by sending postMessage to iframe
-        iframeRef.current.contentWindow?.postMessage(
-          { event: "command", func: "unMute" },
-          "*",
-        );
-      }
+      const tryUnmute = () => {
+        if (iframeRef.current) {
+          iframeRef.current.contentWindow?.postMessage(
+            { event: "command", func: "unMute" },
+            "https://www.youtube.com",
+          );
+        }
+      };
+
+      // Retry a few times since YouTube iframe may not be ready immediately
+      tryUnmute();
+      const retryInterval = setInterval(() => {
+        if (document.hidden) {
+          clearInterval(retryInterval);
+          return;
+        }
+        tryUnmute();
+      }, 500);
+
+      setTimeout(() => clearInterval(retryInterval), 5000);
     }, 2000);
 
     // Intersection Observer to pause when scrolled out of view
@@ -65,9 +78,9 @@ export function HeroMedia({
       {mode === "trailer" && trailerUrl ? (
         <iframe
           ref={iframeRef}
-          src={`${trailerUrl}?autoplay=1&mute=1&controls=1&modestbranding=1&fs=0`}
+          src={`${trailerUrl}?autoplay=1&mute=1&controls=1&modestbranding=1&fs=0&enablejsapi=1`}
           title="Featured trailer"
-          className="absolute inset-0 h-full w-full scale-175 object-cover"
+          className="absolute inset-0 h-full w-full"
           style={{ transformOrigin: "center" }}
           allow="autoplay *; encrypted-media"
           allowFullScreen

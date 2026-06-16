@@ -17,20 +17,27 @@ interface TMDBMovie {
 
 type TMDBMovieResponse = PaginatedResponse<TMDBMovie>;
 
-export const getPopularMovies = async (): Promise<Movie[]> => {
+export const getPopularMovies = async (
+  page: number = 1
+): Promise<{ movies: Movie[]; totalPages: number; page: number }> => {
   const data = await tmdbClient<TMDBMovieResponse>(
-    TMDB_ENDPOINTS.popularMovies
+    TMDB_ENDPOINTS.popularMovies,
+    { params: { page, language: "en-US" } }
   );
 
-  return data.results.map((movie) => ({
-    id: movie.id,
-    title: movie.title,
-    original_title: movie.original_title,
-    overview: movie.overview,
-    poster_path: movie.poster_path,
-    backdrop_path: movie.backdrop_path,
-    release_date: movie.release_date,
-    vote_average: movie.vote_average,
-    popularity: movie.popularity,
-  }));
+  return {
+    movies: data.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      original_title: movie.original_title,
+      overview: movie.overview,
+      poster_path: movie.poster_path,
+      backdrop_path: movie.backdrop_path,
+      release_date: movie.release_date,
+      vote_average: movie.vote_average,
+      popularity: movie.popularity,
+    })),
+    totalPages: data.total_pages,
+    page: data.page,
+  };
 };

@@ -12,7 +12,7 @@ const MovieRowControls = ({ side, onClick }: Props) => {
     <button
       onClick={onClick}
       className={`
-        absolute object-cover top-1/2 -translate-y-1/2 z-20
+        hidden md:flex absolute object-cover top-1/2 -translate-y-1/2 z-20
         ${side === "left" ? "left-4" : "right-4"}
         h-13 w-13  text-white bg-auto bg-black/40 rounded-lg py-15.5
         flex items-center justify-center
