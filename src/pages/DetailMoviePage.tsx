@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { tmdbClient } from "@/api/tmdbClient";
 import { TMDB_ENDPOINTS } from "@/api/endpoints";
 import type { Movie } from "@/types/movie";
+import { usePopupDetector } from "@/hooks/usePopupDetector";
 
 type VideoServer = "vidlink" | "vidsrc" | "vidnest" | "2embed" | "superembed";
 
@@ -21,6 +22,8 @@ const DetailMoviePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeServer, setActiveServer] = useState<VideoServer>("vidlink");
+
+  usePopupDetector();
 
   useEffect(() => {
     if (!movieId) {

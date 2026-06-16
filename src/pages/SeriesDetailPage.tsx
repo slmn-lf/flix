@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { getTVDetail, getSeasonEpisodes } from "@/services/tvService";
 import type { TVDetail, Episode } from "@/types/tv";
+import { usePopupDetector } from "@/hooks/usePopupDetector";
 import { getBackdropUrl } from "@/utils/image";
 import { ChevronRight } from "lucide-react";
 
@@ -17,6 +18,8 @@ const SeriesDetailPage = () => {
   const [activeServer, setActiveServer] = useState<VideoServer>("vidlink");
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
+
+  usePopupDetector();
 
   useEffect(() => {
     if (!seriesId) {
