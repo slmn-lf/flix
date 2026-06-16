@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router";
 import { getTVDetail, getSeasonEpisodes } from "@/services/tvService";
 import type { TVDetail, Episode } from "@/types/tv";
 import { usePopupDetector } from "@/hooks/usePopupDetector";
+import AdBlockerBadge from "@/components/AdBlockerBadge";
+import CookieConsent from "@/components/CookieConsent";
 import { getBackdropUrl } from "@/utils/image";
 import { ChevronRight } from "lucide-react";
 
@@ -254,6 +256,9 @@ const SeriesDetailPage = () => {
           </div>
         </div>
       </div>
+
+      <AdBlockerBadge />
+      <CookieConsent />
     </div>
   );
 };

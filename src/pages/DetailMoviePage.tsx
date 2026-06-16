@@ -4,6 +4,8 @@ import { tmdbClient } from "@/api/tmdbClient";
 import { TMDB_ENDPOINTS } from "@/api/endpoints";
 import type { Movie } from "@/types/movie";
 import { usePopupDetector } from "@/hooks/usePopupDetector";
+import AdBlockerBadge from "@/components/AdBlockerBadge";
+import CookieConsent from "@/components/CookieConsent";
 
 type VideoServer = "vidlink" | "vidsrc" | "vidnest" | "2embed" | "superembed";
 
@@ -163,6 +165,9 @@ const DetailMoviePage = () => {
           ← Back to Home
         </button>
       </div>
+
+      <AdBlockerBadge />
+      <CookieConsent />
     </div>
   );
 };
