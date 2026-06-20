@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { tmdbClient } from "@/api/tmdbClient";
-import { TMDB_ENDPOINTS } from "@/api/endpoints";
+import { getMovieDetail } from "@/services/movieService";
 import type { Movie } from "@/types/movie";
 import { usePopupDetector } from "@/hooks/usePopupDetector";
 import AdBlockerBadge from "@/components/AdBlockerBadge";
@@ -38,9 +37,7 @@ const DetailMoviePage = () => {
       try {
         setLoading(true);
 
-        const movieData = await tmdbClient<Movie>(
-          TMDB_ENDPOINTS.movieDetail(parseInt(movieId)),
-        );
+        const movieData = await getMovieDetail(parseInt(movieId));
 
         setMovie(movieData);
         setError(null);

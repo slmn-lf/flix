@@ -1,18 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef } from "react";
 
 interface HeroMediaProps {
   backdropUrl: string;
   trailerUrl: string | null;
   mode: "trailer" | "banner";
   onTrailerEnd: () => void;
+  visible: boolean;
 }
 
-export function HeroMedia({
+export const HeroMedia = forwardRef<HTMLIFrameElement, HeroMediaProps>(function HeroMedia({
   backdropUrl,
   trailerUrl,
   mode,
   onTrailerEnd,
-}: HeroMediaProps) {
+  visible,
+}, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -30,8 +32,8 @@ export function HeroMedia({
       const tryUnmute = () => {
         if (iframeRef.current) {
           iframeRef.current.contentWindow?.postMessage(
-            { event: "command", func: "unMute" },
-            "https://www.youtube.com",
+            JSON.stringify({ event: "command", func: "unMute", args: [] }),
+            "*",
           );
         }
       };
@@ -47,7 +49,7 @@ export function HeroMedia({
       }, 500);
 
       setTimeout(() => clearInterval(retryInterval), 5000);
-    }, 2000);
+    }, 7500);
 
     // Intersection Observer to pause when scrolled out of view
     const observer = new IntersectionObserver(
@@ -74,13 +76,20 @@ export function HeroMedia({
   }, [mode, onTrailerEnd]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
+    <div
+      ref={containerRef}
+      className={`absolute inset-0 overflow-hidden transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+    >
       {mode === "trailer" && trailerUrl ? (
         <iframe
-          ref={iframeRef}
+          ref={(node) => {
+            iframeRef.current = node;
+            if (typeof ref === "function") ref(node);
+            else if (ref) ref.current = node;
+          }}
           src={`${trailerUrl}?autoplay=1&mute=1&controls=1&modestbranding=1&fs=0&enablejsapi=1`}
           title="Featured trailer"
-          className="absolute inset-0 h-full w-full"
+          className="absolute inset-0 h-full w-full scale-125"
           style={{ transformOrigin: "center" }}
           allow="autoplay *; encrypted-media"
           allowFullScreen
@@ -89,9 +98,9 @@ export function HeroMedia({
         <img
           src={backdropUrl}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         />
       )}
     </div>
   );
-}
+});

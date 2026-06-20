@@ -1,6 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { getPopularMovies } from "@/services/movieService";
 import type { Movie } from "@/types/movie";
+import CardSkeleton from "@/components/CardSkeleton";
 import MediaGrid from "@/components/MovieGrid/MovieGrid";
 import Pagination from "@/components/Pagination/Pagination";
 
@@ -27,9 +28,7 @@ const MoviesPage = () => {
       <h1 className="text-3xl font-bold text-white px-4 sm:px-8 md:px-12 lg:px-16 mb-6">Popular Movies</h1>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-gray-800 border-t-transparent rounded-full animate-spin" />
-        </div>
+        <CardSkeleton count={12} />
       ) : (
         <>
           <MediaGrid

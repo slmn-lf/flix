@@ -17,6 +17,12 @@ interface TMDBMovie {
 
 type TMDBMovieResponse = PaginatedResponse<TMDBMovie>;
 
+export const getMovieDetail = async (movieId: number): Promise<Movie> => {
+  return tmdbClient<Movie>(TMDB_ENDPOINTS.movieDetail(movieId), {
+    params: { language: "en-US" },
+  });
+};
+
 export const getPopularMovies = async (
   page: number = 1
 ): Promise<{ movies: Movie[]; totalPages: number; page: number }> => {

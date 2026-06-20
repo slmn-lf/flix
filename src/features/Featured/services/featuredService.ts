@@ -1,19 +1,11 @@
 import { tmdbClient } from "@/api/tmdbClient";
 import { TMDB_ENDPOINTS } from "@/api/endpoints";
-import { ENV } from "@/config/env";
+import { getImageUrl } from "@/utils/image";
 import type { VideoResponse, ImageResponse } from "@/api/types";
 import type { FeaturedMovie } from "@/types/featured";
 import type { Movie } from "@/types/movie";
 import type { PaginatedResponse } from "@/types/common";
 import type { MovieCardData } from "@/types/row";
-
-const buildImageUrl = (
-  path: string | null,
-  size: string = "original",
-): string | null => {
-  if (!path) return null;
-  return `${ENV.TMDB_IMAGE_BASE_URL}/${size}${path}`;
-};
 
 const getTrailerUrl = async (
   movieId: number,
@@ -64,7 +56,7 @@ const getLogoUrl = async (movieId: number): Promise<string | null> => {
       prev.vote_average > current.vote_average ? prev : current,
     );
 
-    return buildImageUrl(bestLogo.file_path, "w500");
+    return getImageUrl(bestLogo.file_path, "medium");
   } catch (error) {
     console.error("Error fetching logo:", error);
     return null;
@@ -101,7 +93,7 @@ export const fetchFeaturedMovie = async (): Promise<FeaturedMovie> => {
       title: movie.title,
       overview: movie.overview,
       backdrop_path: movie.backdrop_path,
-      posterUrl: buildImageUrl(movie.poster_path, "w500"),
+      posterUrl: getImageUrl(movie.poster_path, "medium", "poster"),
       logoUrl,
       trailerUrl: trailerData.url,
       trailerKey: trailerData.key,
@@ -135,7 +127,7 @@ export const fetchFeaturedMovieById = async (
       title: movieDetail.title,
       overview: movieDetail.overview,
       backdrop_path: movieDetail.backdrop_path,
-      posterUrl: buildImageUrl(movieDetail.poster_path, "w500"),
+      posterUrl: getImageUrl(movieDetail.poster_path, "medium", "poster"),
       logoUrl,
       trailerUrl: trailerData.url,
       trailerKey: trailerData.key,
@@ -162,7 +154,7 @@ export const fetchPopularRow = async (): Promise<MovieCardData[]> => {
   return res.results.map((movie) => ({
     id: movie.id,
     title: movie.title,
-    posterUrl: buildImageUrl(movie.poster_path),
+    posterUrl: getImageUrl(movie.poster_path, "original", "poster"),
     logoUrl: "",
   }));
 };
@@ -209,7 +201,7 @@ const fetchRowFromEndpoint = async (
   return res.results.map((item) => ({
     id: item.id,
     title: item.title || item.name || "",
-    posterUrl: buildImageUrl(item.poster_path),
+    posterUrl: getImageUrl(item.poster_path, "original", "poster"),
     logoUrl: "",
   }));
 };

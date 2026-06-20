@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { mockFeatured } from "./mockFeatured";
 import { HeroContent } from "./HeroContent";
 import { HeroMedia } from "./HeroMedia";
 import HeroGradient from "./HeroGradient";
+import HeroSkeleton from "@/components/HeroSkeleton";
+import { getBackdropUrl } from "@/utils/image";
 import { fetchFeaturedMovie } from "../services/featuredService";
 import type { FeaturedMovie } from "@/types";
 
@@ -11,6 +13,20 @@ export default function FeaturedHero() {
   const [featured, setFeatured] = useState<FeaturedMovie | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [splash, setSplash] = useState(true);
+  const [muted, setMuted] = useState(true);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const handleToggle = () => {
+    const func = muted ? "unMute" : "mute";
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: "command", func, args: [] }),
+      "*",
+    );
+    setMuted(!muted);
+  };
+
+  const showTrailerMode = !splash && mode === "trailer";
 
   useEffect(() => {
     const loadFeatured = async () => {
@@ -23,7 +39,6 @@ export default function FeaturedHero() {
         setError(
           err instanceof Error ? err.message : "Failed to load featured movie",
         );
-        // Fallback ke mock data
         setFeatured({
           id: 0,
           title: mockFeatured.title,
@@ -42,15 +57,14 @@ export default function FeaturedHero() {
     loadFeatured();
   }, []);
 
+  useEffect(() => {
+    if (!featured || !splash) return;
+    const timer = setTimeout(() => setSplash(false), 7000);
+    return () => clearTimeout(timer);
+  }, [featured, splash]);
+
   if (loading) {
-    return (
-      <section className="relative h-[85vh] w-full overflow-hidden bg-black flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="mb-4">Loading featured content...</div>
-          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-        </div>
-      </section>
-    );
+    return <HeroSkeleton />;
   }
 
   if (!featured) {
@@ -64,23 +78,50 @@ export default function FeaturedHero() {
     );
   }
 
+  const showOverlay = !splash;
+
   return (
     <section className="relative w-full overflow-hidden bg-black aspect-video md:h-[85vh]">
       <HeroMedia
-        backdropUrl={featured.posterUrl || mockFeatured.backdropUrl}
+        ref={iframeRef}
+        backdropUrl={getBackdropUrl(featured.backdrop_path, "original")}
         trailerUrl={featured.trailerUrl}
         mode={mode}
         onTrailerEnd={() => setMode("banner")}
+        visible={!splash}
       />
 
-      <HeroGradient />
+      {/* Splash — backdrop + gradient + content, auto fade out 7s */}
+      <div
+        className={`absolute inset-0 z-30 transition-opacity duration-700 ${splash ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      >
+        <img
+          src={getBackdropUrl(featured.backdrop_path, "original")}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <HeroGradient />
+        <HeroContent
+          id={featured.id}
+          title={featured.title}
+          overview={featured.overview}
+          logoUrl={featured.logoUrl}
+        />
+      </div>
 
-      <HeroContent
-        id={featured.id}
-        title={featured.title}
-        overview={featured.overview}
-        logoUrl={featured.logoUrl}
-      />
+      {/* Gradient & content — setelah splash */}
+      {showOverlay && <HeroGradient />}
+      {showOverlay && (
+        <HeroContent
+          id={featured.id}
+          title={featured.title}
+          overview={featured.overview}
+          logoUrl={featured.logoUrl}
+          onToggle={handleToggle}
+          isMuted={muted}
+          showTrailer={showTrailerMode}
+        />
+      )}
     </section>
   );
 }

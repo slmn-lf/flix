@@ -2,6 +2,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useSearchParams, Link } from "react-router";
 import { searchMulti } from "@/services/searchService";
 import { getPosterUrl } from "@/utils/image";
+import CardSkeleton from "@/components/CardSkeleton";
 
 interface SearchResult {
   id: number;
@@ -66,9 +67,7 @@ const SearchPage = () => {
       )}
 
       {loading && (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-gray-800 border-t-transparent rounded-full animate-spin" />
-        </div>
+        <CardSkeleton count={12} />
       )}
 
       {!loading && query && results.length === 0 && (

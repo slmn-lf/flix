@@ -21,8 +21,6 @@ const Navbar = () => {
     { to: "/", children: "Home" },
     { to: "/movies", children: "Movies" },
     { to: "/series", children: "Shows" },
-    { to: "/latest", children: "New & Popular" },
-    { to: "/list", children: "My List" },
   ];
 
   return (

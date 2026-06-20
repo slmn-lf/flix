@@ -1,6 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { getPopularTVShows } from "@/services/tvService";
 import type { TV } from "@/types/tv";
+import CardSkeleton from "@/components/CardSkeleton";
 import MediaGrid from "@/components/MovieGrid/MovieGrid";
 import Pagination from "@/components/Pagination/Pagination";
 
@@ -29,9 +30,7 @@ const SeriesPage = () => {
       </h1>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-gray-800 border-t-transparent rounded-full animate-spin" />
-        </div>
+        <CardSkeleton count={12} />
       ) : (
         <>
           <MediaGrid

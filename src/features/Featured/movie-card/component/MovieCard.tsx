@@ -1,9 +1,6 @@
 type Props = {
   title: string;
   posterUrl: string;
-
-  onHover: (rect: DOMRect) => void;
-  onLeave: () => void;
 };
 
 const MovieCard = ({ title, posterUrl }: Props) => {

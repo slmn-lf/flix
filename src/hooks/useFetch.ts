@@ -3,7 +3,6 @@ import type { UseFetchState } from "@/types/hooks";
 
 export function useFetch<T>(
   fetchFn: () => Promise<T>,
-  // User can control refetch by changing dependencies
   dependencies: unknown[] = [],
 ): UseFetchState<T> {
   const [state, setState] = useState<UseFetchState<T>>({
@@ -14,13 +13,12 @@ export function useFetch<T>(
 
   const fetchFnRef = useRef(fetchFn);
 
-  // Update ref when fetchFn changes
+  // Keep ref in sync without triggering effects
   useEffect(() => {
     fetchFnRef.current = fetchFn;
-    // Intentional: user controls via dependencies
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dependencies]);
+  });
 
+  // Re-fetch whenever dependencies change
   useEffect(() => {
     let isMounted = true;
 
@@ -46,7 +44,7 @@ export function useFetch<T>(
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [dependencies]);
 
   return state;
 }
