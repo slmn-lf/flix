@@ -29,7 +29,7 @@ export function HeroContent({
           <img
             src={logoUrl}
             alt={title}
-            className="mb-2 md:mb-6 w-32 md:w-64"
+            className="mb-2 md:mb-6 w-24 md:w-64"
           />
         ) : (
           <h1 className="mb-2 md:mb-4 text-xl md:text-5xl font-bold">
