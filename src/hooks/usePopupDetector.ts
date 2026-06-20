@@ -12,11 +12,15 @@ export function usePopupDetector() {
 
     let blurTimer: ReturnType<typeof setTimeout> | null = null;
 
+    const suspect = () => {
+      if (swActive) {
+        swActive.postMessage({ type: "suspect" });
+      }
+    };
+
     const handleBlur = () => {
       blurTimer = setTimeout(() => {
-        if (!document.hasFocus() && swActive) {
-          swActive.postMessage({ type: "suspect" });
-        }
+        if (!document.hasFocus()) suspect();
       }, 500);
     };
 
@@ -27,12 +31,18 @@ export function usePopupDetector() {
       }
     };
 
+    const handleVisibility = () => {
+      if (document.hidden) suspect();
+    };
+
     window.addEventListener("blur", handleBlur);
     window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
       window.removeEventListener("blur", handleBlur);
       window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
       if (blurTimer) clearTimeout(blurTimer);
     };
   }, []);
