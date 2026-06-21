@@ -11,7 +11,7 @@ const MovieRowSkeleton = ({ title, cardCount = 8 }: Props) => {
         {Array.from({ length: cardCount }).map((_, i) => (
           <div
             key={i}
-            className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 shrink-0"
+            className="w-1/3 sm:w-1/4 md:w-1/5 lg:w-1/6 shrink-0"
           >
             <div className="aspect-[2/3] rounded-lg bg-neutral-800 animate-pulse" />
           </div>

@@ -70,13 +70,15 @@ const MovieRow = ({
           {items.map((item) => (
             <div
               key={item.id}
-              className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 shrink-0"
+              className="w-1/3 sm:w-1/4 md:w-1/5 lg:w-1/6 shrink-0"
             >
-              <Link to={linkTo(item)} className="block h-full">
-                <MovieCard
-                  title={item.title}
-                  posterUrl={item.posterUrl ?? ""}
-                />
+              <Link to={linkTo(item)} className="block">
+                <div className="aspect-[2/3]">
+                  <MovieCard
+                    title={item.title}
+                    posterUrl={item.posterUrl ?? ""}
+                  />
+                </div>
               </Link>
             </div>
           ))}

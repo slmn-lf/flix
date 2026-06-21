@@ -34,7 +34,7 @@ const Navbar = () => {
       >
         <div className="flex items-center flex-1">
           <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
-            <img width={90} src="./../NetflixLogoSvg.svg" alt="clone netflix" />
+            <img width={90} src="./../flix.svg" alt="clone netflix" />
           </Link>
 
           <div className="hidden md:flex gap-4 ml-8">

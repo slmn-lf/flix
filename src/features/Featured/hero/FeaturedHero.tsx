@@ -14,6 +14,7 @@ export default function FeaturedHero() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [splash, setSplash] = useState(true);
+  const [countdown, setCountdown] = useState(8);
   const [muted, setMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -59,9 +60,18 @@ export default function FeaturedHero() {
 
   useEffect(() => {
     if (!featured || !splash) return;
-    const timer = setTimeout(() => setSplash(false), 7000);
+    const timer = setTimeout(() => setSplash(false), 8000);
     return () => clearTimeout(timer);
   }, [featured, splash]);
+
+  useEffect(() => {
+    if (!splash) return;
+    setCountdown(10);
+    const interval = setInterval(() => {
+      setCountdown((prev) => (prev > 1 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [splash]);
 
   if (loading) {
     return <HeroSkeleton />;
@@ -106,6 +116,7 @@ export default function FeaturedHero() {
           title={featured.title}
           overview={featured.overview}
           logoUrl={featured.logoUrl}
+          countdown={countdown}
         />
       </div>
 

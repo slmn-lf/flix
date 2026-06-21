@@ -9,6 +9,7 @@ type Props = {
   onToggle?: () => void;
   isMuted?: boolean;
   showTrailer?: boolean;
+  countdown?: number;
 };
 
 export function HeroContent({
@@ -19,6 +20,7 @@ export function HeroContent({
   onToggle,
   isMuted,
   showTrailer,
+  countdown,
 }: Props) {
   const navigate = useNavigate();
 
@@ -29,7 +31,7 @@ export function HeroContent({
           <img
             src={logoUrl}
             alt={title}
-            className="mb-2 md:mb-6 w-24 md:w-64"
+            className="mb-2 md:mb-6 w-16 md:w-64"
           />
         ) : (
           <h1 className="mb-2 md:mb-4 text-xl md:text-5xl font-bold">
@@ -54,7 +56,11 @@ export function HeroContent({
           >
             More Info
           </button>
-          {showTrailer && onToggle && (
+          {countdown != null && countdown > 0 ? (
+            <div className="rounded bg-white/30 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-base font-semibold flex items-center gap-1 tabular-nums">
+              {countdown}
+            </div>
+          ) : showTrailer && onToggle ? (
             <button
               onClick={onToggle}
               className="rounded bg-white/30 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-base font-semibold hover:bg-white/40 transition flex items-center gap-1"
@@ -69,7 +75,7 @@ export function HeroContent({
                 </>
               )}
             </button>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
